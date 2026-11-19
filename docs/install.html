@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Install Perch | Setup guide for Google TV and Android TV</title>
+  <meta name="description" content="How to sideload the Perch camera wall app on Google TV, Android TV and Fire TV, set up a Tapo camera account, and add wired, battery and solar cameras." />
+  <link rel="canonical" href="https://jtcozart.github.io/perch-tv/install.html" />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <meta name="theme-color" content="#00296c" />
+  <link rel="stylesheet" href="theme.css" />
+  <link rel="stylesheet" href="site.css" />
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container nav">
+    <a class="brand" href="./" aria-label="Perch home">
+      <svg viewBox="0 0 48 48" aria-hidden="true"><rect width="48" height="48" rx="8" fill="#0B1220"/><rect x="10" y="10" width="12" height="12" fill="#FBBF24"/><circle cx="16" cy="16" r="3" fill="#0B1220"/><rect x="26" y="10" width="12" height="12" fill="#334155"/><rect x="10" y="26" width="12" height="12" fill="#334155"/><rect x="26" y="26" width="12" height="12" fill="#334155"/></svg>
+      <span>Perch</span>
+    </a>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="navLinks">
+      <span></span><span></span><span></span>
+    </button>
+    <nav class="nav-links" id="navLinks">
+      <a href="./#features">Features</a>
+      <a href="./#cameras">Which cameras</a>
+      <a class="active" href="install.html">Install guide</a>
+      <a class="nav-cta" href="https://github.com/JTCozart/perch-tv/releases/latest/download/perch-tv.apk">Download</a>
+    </nav>
+  </div>
+</header>
+
+<main class="guide">
+  <div class="container">
+    <p class="eyebrow">Install guide</p>
+    <h1>Installing Perch and adding your cameras</h1>
+    <p>Perch is not in the Google Play Store, so it is installed from its APK file. This is called sideloading. It takes a
+      few minutes the first time. Then you give each camera a camera account and add it on the TV.</p>
+
+    <div class="toc">
+      <a class="btn btn-ghost btn-sm" href="#downloader">Downloader app (easiest)</a>
+      <a class="btn btn-ghost btn-sm" href="#phone">Send from your phone</a>
+      <a class="btn btn-ghost btn-sm" href="#adb">ADB from a computer</a>
+      <a class="btn btn-ghost btn-sm" href="#fire-tv">Amazon Fire TV</a>
+      <a class="btn btn-ghost btn-sm" href="#tapo">Set up Tapo cameras</a>
+      <a class="btn btn-ghost btn-sm" href="#solar">Battery and solar cameras</a>
+      <a class="btn btn-ghost btn-sm" href="#troubleshooting">Troubleshooting</a>
+    </div>
+
+    <p>The download link is always the newest release:</p>
+    <div class="url-box">https://github.com/JTCozart/perch-tv/releases/latest/download/perch-tv.apk</div>
+
+    <div class="callout">
+      Menu names differ a little between TV makers and Android versions. If a setting is not exactly where these steps
+      say, look for the same words under Settings &gt; Apps or Settings &gt; System.
+    </div>
+
+    <h2 id="before">Before you start: allow installing apps</h2>
+    <p>Android only installs apps from outside the Play Store when you give a specific app permission to do it. On newer
+      Google TV devices that option is hidden until developer options are turned on.</p>
+    <ol>
+      <li>Open <strong>Settings &gt; System &gt; About</strong>.</li>
+      <li>Scroll to <strong>Android TV OS build</strong> (or <strong>Build</strong>) and press Select on it seven times,
+        until a message says you are now a developer.</li>
+      <li>Go back to <strong>Settings &gt; Apps &gt; Security &amp; restrictions &gt; Unknown sources</strong>. On some
+        devices this is under <strong>Settings &gt; Privacy &gt; Security &amp; restrictions</strong>.</li>
+      <li>Turn it on for the app you will install Perch with, such as Downloader or your file manager. You can turn it
+        off again once Perch is installed.</li>
+    </ol>
+
+    <h2 id="downloader">Method 1: the Downloader app (easiest)</h2>
+    <p>Downloader is a free app built for exactly this. Everything happens on the TV.</p>
+    <ol>
+      <li>On the TV, open the Play Store, search for <strong>Downloader</strong> by AFTVnews and install it.</li>
+      <li>Allow Downloader to install unknown apps, as described in <a href="#before">Before you start</a>.</li>
+      <li>Open Downloader. In the address box, type the download link above and choose <strong>Go</strong>.</li>
+      <li>When the download finishes, choose <strong>Install</strong>, then <strong>Done</strong>.</li>
+      <li>Downloader offers to delete the APK file. You can say yes; Perch stays installed.</li>
+    </ol>
+
+    <h2 id="phone">Method 2: send it from your phone</h2>
+    <p>Handy if typing a long address with a remote is a chore.</p>
+    <ol>
+      <li>Install <strong>Send files to TV</strong> (or a similar file transfer app) on both your phone and the TV.</li>
+      <li>On your phone, open the download link above to save <code>perch-tv.apk</code>.</li>
+      <li>Open the transfer app on both devices, choose <strong>Receive</strong> on the TV and <strong>Send</strong> on
+        the phone, and pick the APK.</li>
+      <li>On the TV, open the received file from a file manager that you have allowed to install unknown apps, and choose
+        <strong>Install</strong>.</li>
+    </ol>
+
+    <h2 id="adb">Method 3: ADB from a computer</h2>
+    <p>For people comfortable with a command line. ADB is part of Google's free Android SDK Platform Tools.</p>
+    <ol>
+      <li>Turn on developer options on the TV, as in <a href="#before">Before you start</a>.</li>
+      <li>In <strong>Settings &gt; System &gt; Developer options</strong>, turn on <strong>USB debugging</strong> or
+        <strong>Network debugging</strong>. Newer Google TV devices call it <strong>Wireless debugging</strong>.</li>
+      <li>Find the TV's IP address under <strong>Settings &gt; Network &amp; Internet</strong>, on your current network.</li>
+      <li>On the computer, connect to the TV. With Wireless debugging, first choose <strong>Pair device with pairing
+        code</strong> on the TV and pair using the address and code it shows, then connect to the address on the Wireless
+        debugging screen (older devices use port 5555):
+        <pre>adb pair 192.168.1.50:37425
+adb connect 192.168.1.50:5555</pre></li>
+      <li>Accept the <strong>Allow debugging?</strong> prompt that appears on the TV.</li>
+      <li>Download the APK on the computer and install it. The <code>-r</code> flag lets the same command update an
+        existing install.
+        <pre>adb install -r perch-tv.apk</pre></li>
+    </ol>
+
+    <h2 id="fire-tv">Amazon Fire TV</h2>
+    <p>Perch is built for Android TV and Google TV. Fire TV runs a version of Android, so it should work there too, but it
+      has not been tested.</p>
+    <ol>
+      <li>Go to <strong>Settings &gt; My Fire TV &gt; About</strong> and select your device name seven times to show
+        developer options.</li>
+      <li>Go to <strong>Settings &gt; My Fire TV &gt; Developer options &gt; Install unknown apps</strong> and turn it on
+        for Downloader.</li>
+      <li>Install Downloader from the Amazon Appstore and follow <a href="#downloader">Method 1</a>.</li>
+    </ol>
+
+    <h2 id="tapo">Set up wired Tapo cameras</h2>
+    <p>Tapo cameras only share their video with other apps after you create a <strong>camera account</strong> on each one.
+      It is a separate user name and password, not your Tapo login, and it only works on your home network.</p>
+
+    <h3>1. Create the camera account</h3>
+    <ol>
+      <li>In the Tapo app on your phone, open the camera and tap the settings (gear) icon.</li>
+      <li>Open <strong>Advanced Settings &gt; Camera Account</strong>.</li>
+      <li>Choose a user name and password, each 6 to 32 characters. Use the same pair on every camera if you like.</li>
+    </ol>
+
+    <h3>2. Find the camera's IP address</h3>
+    <ol>
+      <li>In the camera's settings, open <strong>Device Info</strong> and note the IP address, such as
+        <code>192.168.1.40</code>.</li>
+      <li>In your router, reserve that address for the camera (often called a <strong>DHCP reservation</strong> or
+        <strong>static lease</strong>). Otherwise the address can change after a power cut and the tile will go offline.</li>
+    </ol>
+
+    <h3>3. Add it in Perch</h3>
+    <ol>
+      <li>Open Perch. The first time, choose <strong>Add a camera</strong>; later, choose <strong>Cameras &gt; Add a
+        camera</strong>.</li>
+      <li>Leave <strong>Tapo camera (RTSP)</strong> selected and enter a name, the IP address, and the camera account.
+        The port is 554 unless you changed it.</li>
+      <li>For a dual-lens model, choose <strong>Telephoto lens</strong> to show the second lens instead. Add the camera
+        twice to see both.</li>
+      <li>Choose <strong>Save</strong>. Back on the wall, the tile says <strong>Live</strong> once video arrives.</li>
+    </ol>
+    <p>Wall tiles use the camera's lighter stream so many can play at once. Selecting a tile opens the full-quality stream
+      with sound. On some models the full-quality resolution follows the video quality setting in the Tapo app.</p>
+
+    <h3>Other RTSP cameras</h3>
+    <p>Choose <strong>Stream from a bridge</strong> and enter the camera's full RTSP address, including any user name and
+      password your camera needs, for example <code>rtsp://user:password@192.168.1.60:554/live</code>. If the camera has
+      a lower-quality stream, put that in <strong>Tile stream address</strong>.</p>
+
+    <h2 id="solar">Battery and solar cameras</h2>
+    <div class="callout warning">
+      <strong>Tapo battery and solar models cannot be played directly.</strong> TP-Link's FAQ says the C410, C420, C425 and
+      D230 do not support RTSP, because streaming all the time would drain the battery. This applies to every app, not
+      just Perch.
+    </div>
+    <p>What you can do:</p>
+    <ul>
+      <li><strong>Use a bridge.</strong> If something on your network can re-publish the camera as an RTSP or HLS stream,
+        add that address in Perch with <strong>Stream from a bridge</strong>. Tools such as go2rtc and Home Assistant
+        publish streams like <code>rtsp://192.168.1.10:8554/garden</code>. Check that your bridge supports your exact
+        camera model first: support for Tapo battery cameras is limited.</li>
+      <li><strong>Hardwire a doorbell.</strong> The Tapo D225, D235 and TD25 offer RTSP when wired with the jumper cable
+        and set to always on. They then work like any wired camera.</li>
+      <li><strong>Choose a wired model for spots you want on the wall.</strong> A plug-in outdoor camera on a weatherproof
+        outdoor socket streams all day.</li>
+    </ul>
+
+    <h2 id="using">Using the wall</h2>
+    <ul>
+      <li>Move between tiles with the remote's arrows. Press <strong>Select</strong> to open a camera full screen with sound.</li>
+      <li>Full screen, <strong>left</strong> and <strong>right</strong> step through your cameras and <strong>Back</strong>
+        returns to the wall.</li>
+      <li><strong>Cameras</strong> at the top of the wall lets you add, edit, reorder and remove cameras. The wall shows 16
+        cameras a page.</li>
+      <li>If a tile says <strong>Paused</strong>, your TV has run out of video decoders for live tiles. Select it to watch
+        it full screen, or move the cameras you care about most to the start of the list.</li>
+      <li>Perch keeps the screen on while it is open, so the TV's screensaver does not cover the wall.</li>
+    </ul>
+
+    <h2 id="updating">Updating</h2>
+    <p>Install the newest APK the same way you installed Perch, over the top of the old one. Your cameras are kept. Each
+      release is listed on the <a href="https://github.com/JTCozart/perch-tv/releases">releases page</a> with notes on
+      what changed.</p>
+
+    <h3>Checking the download</h3>
+    <p>Every release includes a <code>SHA256SUMS</code> file. To confirm the APK you downloaded is the one the release
+      published, compare its checksum:</p>
+    <pre>sha256sum perch-tv.apk        # Linux and macOS
+Get-FileHash perch-tv.apk     # Windows PowerShell</pre>
+    <p>Only download Perch from this site or from the GitHub releases page. An APK from anywhere else could have been changed.</p>
+
+    <h2 id="troubleshooting">Troubleshooting</h2>
+    <h3>A tile stays on "Connecting" or "Offline, retrying"</h3>
+    <ul>
+      <li>Check the IP address in the Tapo app still matches, and reserve it in your router.</li>
+      <li>Make sure you entered the <strong>camera account</strong>, not your Tapo app login.</li>
+      <li>Make sure the TV and the camera are on the same network. Guest Wi-Fi networks usually keep devices apart.</li>
+      <li>A camera that is already streaming to several other apps or an NVR may refuse more connections.</li>
+    </ul>
+    <h3>"App not installed" or "There was a problem parsing the package"</h3>
+    <p>The download may be incomplete; delete it and download again. If you previously installed a differently signed copy
+      of Perch, uninstall it first.</p>
+    <h3>The Install button is greyed out or nothing happens</h3>
+    <p>The app you are installing from has not been allowed to install unknown apps. See
+      <a href="#before">Before you start</a>.</p>
+    <h3>My cameras are gone after clearing the app's data</h3>
+    <p>Camera details are encrypted with a key that lives only in that TV's secure storage, so clearing data or moving to a
+      new TV means adding the cameras again.</p>
+
+    <p class="fine-print">Perch is an independent app and is not made by, endorsed by or affiliated with TP-Link. Tapo is a
+      trademark of TP-Link.</p>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-cta">
+      <h2>Ready to put your cameras on the TV?</h2>
+      <a class="btn btn-primary" href="https://github.com/JTCozart/perch-tv/releases/latest/download/perch-tv.apk">Download Perch</a>
+    </div>
+
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a class="brand" href="./"><svg viewBox="0 0 48 48" aria-hidden="true"><rect width="48" height="48" rx="8" fill="#0B1220"/><rect x="10" y="10" width="12" height="12" fill="#FBBF24"/><circle cx="16" cy="16" r="3" fill="#0B1220"/><rect x="26" y="10" width="12" height="12" fill="#334155"/><rect x="10" y="26" width="12" height="12" fill="#334155"/><rect x="26" y="26" width="12" height="12" fill="#334155"/></svg> <span>Perch</span></a>
+        <p>A free camera wall for Google TV and Android TV that shows every camera around your home at once.</p>
+      </div>
+
+      <nav class="footer-col" aria-label="Perch">
+        <h3>Perch</h3>
+        <ul>
+          <li><a href="install.html">Install guide</a></li>
+          <li><a href="./#cameras">Which cameras work</a></li>
+          <li><a href="https://github.com/JTCozart/perch-tv">Source and releases</a></li>
+        </ul>
+      </nav>
+
+      <nav class="footer-col" aria-label="Cozart Consulting">
+        <h3>Cozart Consulting</h3>
+        <ul>
+          <li><a href="https://cozartconsulting.com/">Custom software</a></li>
+          <li><a href="https://cozartconsulting.com/#work">More projects</a></li>
+          <li><a href="https://github.com/JTCozart">GitHub</a></li>
+          <li><a href="https://cozartconsulting.com/#contact">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+
+    <div class="footer-bottom">
+      <span>&copy; <span id="year">2026</span> Perch. Designed and built by <a href="https://cozartconsulting.com/">Cozart Consulting</a>, Knoxville, TN.</span>
+      <span class="theme-credit">Theme adapted from <a href="https://www.figma.com/community/file/1479561357645494407">Housefix</a> by Al Razi Siam, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    var toggle = document.getElementById('navToggle');
+    var links = document.getElementById('navLinks');
+    if (!toggle || !links) return;
+    toggle.addEventListener('click', function () {
+      var open = links.classList.toggle('open');
+      toggle.classList.toggle('open', open);
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    links.querySelectorAll('a').forEach(function (a) {
+      a.addEventListener('click', function () {
+        links.classList.remove('open');
+        toggle.classList.remove('open');
+        toggle.setAttribute('aria-expanded', 'false');
+      });
+    });
+  })();
+</script>
+<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

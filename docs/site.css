@@ -1,0 +1,73 @@
+/* Perch page rules, loaded after theme.css. Shared look lives in theme.css; only Perch-specific pieces go here. */
+
+.brand svg { width: 34px; height: 34px; }
+
+.hero .container { display: grid; grid-template-columns: 1.05fr 1fr; gap: 56px; align-items: center; }
+.hero-note { margin-top: 18px; font-size: 0.88rem; color: var(--mk-on-dark-muted); }
+
+/* A drawn camera wall in the hero: an illustration, never a real feed */
+.tv-frame {
+  position: relative;
+  padding: 14px;
+  border-radius: var(--mk-radius-lg);
+  background: #05080f;
+  box-shadow: 0 30px 60px rgba(0, 14, 36, 0.45);
+}
+.tv-frame::after {
+  content: "";
+  position: absolute; left: 50%; bottom: -22px;
+  width: 30%; height: 10px; transform: translateX(-50%);
+  border-radius: 0 0 6px 6px; background: #05080f;
+}
+.wall-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; aspect-ratio: 16 / 9; }
+.wall-tile {
+  position: relative; overflow: hidden; border-radius: 4px;
+  background: linear-gradient(160deg, #1e293b, #0f172a);
+}
+.wall-tile.focused { outline: 3px solid #fbbf24; outline-offset: -3px; }
+.wall-tile .scene { position: absolute; inset: 0; width: 100%; height: 100%; }
+.wall-tile .label, .wall-tile .live {
+  position: absolute; font-size: 0.68rem; font-weight: 600; padding: 2px 7px; border-radius: 4px;
+  background: rgba(11, 18, 32, 0.7);
+}
+.wall-tile .label { left: 6px; bottom: 6px; color: #f8fafc; }
+.wall-tile .live { right: 6px; top: 6px; color: #22c55e; }
+.wall-tile .live.bridge { color: #fbbf24; }
+
+.support-table { width: 100%; border-collapse: collapse; background: var(--mk-surface); box-shadow: var(--mk-shadow); border-radius: var(--mk-radius-lg); overflow: hidden; }
+.support-table th, .support-table td { text-align: left; padding: 16px 18px; border-bottom: 1px solid var(--mk-border); vertical-align: top; }
+.support-table th { background: var(--mk-navy); color: #fff; font-family: var(--mk-font-heading); font-size: 0.92rem; }
+.support-table tr:last-child td { border-bottom: 0; }
+.table-scroll { overflow-x: auto; }
+.tag { display: inline-block; padding: 2px 10px; border-radius: var(--mk-radius); font-size: 0.8rem; font-weight: 700; white-space: nowrap; }
+.tag-yes { background: #e7f6ec; color: #17663a; }
+.tag-bridge { background: #fff4d6; color: #7a5200; }
+.tag-no { background: #fde8e8; color: #9b1c1c; }
+.fine-print { margin-top: 16px; font-size: 0.88rem; color: var(--mk-muted); }
+
+.faq { max-width: 860px; margin: 0 auto; }
+.faq details { border-bottom: 1px solid var(--mk-border); padding: 18px 0; }
+.faq summary { cursor: pointer; font-family: var(--mk-font-heading); font-weight: 700; color: var(--mk-navy); font-size: 1.05rem; }
+.faq details p { margin: 10px 0 0; }
+
+/* Install guide */
+.guide { padding: 64px 0 var(--mk-section-pad); }
+.guide .container { max-width: 860px; }
+.guide h1 { font-size: clamp(2rem, 4vw, 2.6rem); margin: 8px 0 16px; }
+.guide h2 { margin-top: 56px; font-size: 1.6rem; scroll-margin-top: 96px; }
+.guide h3 { margin-top: 28px; font-size: 1.15rem; }
+.guide ol li, .guide ul li { margin-bottom: 8px; }
+.toc { display: flex; flex-wrap: wrap; gap: 10px; margin: 24px 0; }
+.url-box, .guide pre {
+  font-family: var(--mk-font-mono); font-size: 0.9rem;
+  background: var(--mk-tint); border: 1px solid var(--mk-border); border-radius: var(--mk-radius);
+  padding: 14px 16px; overflow-x: auto; word-break: break-all;
+}
+.guide pre { word-break: normal; white-space: pre; }
+.guide code { font-family: var(--mk-font-mono); font-size: 0.9em; background: var(--mk-tint); padding: 1px 5px; border-radius: 3px; overflow-wrap: anywhere; }
+.callout { margin: 24px 0; padding: 16px 18px; border-left: 4px solid var(--mk-primary); background: var(--mk-tint); border-radius: 0 var(--mk-radius) var(--mk-radius) 0; }
+.callout.warning { border-left-color: #d97706; background: #fff8eb; }
+
+@media (max-width: 960px) {
+  .hero .container { grid-template-columns: 1fr; }
+}

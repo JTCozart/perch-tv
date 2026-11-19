@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Perch | Every security camera on your Google TV at once</title>
+  <meta name="description" content="Perch is a free camera wall app for Google TV and Android TV. Watch up to 16 RTSP cameras at once, including wired Tapo cameras, and add battery or solar cameras through a bridge." />
+  <link rel="canonical" href="https://jtcozart.github.io/perch-tv/" />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <meta name="theme-color" content="#00296c" />
+  <meta property="og:title" content="Perch: every camera on your TV at once" />
+  <meta property="og:description" content="A free camera wall for Google TV and Android TV. Wired RTSP cameras play directly; battery and solar cameras join through a bridge." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://jtcozart.github.io/perch-tv/" />
+  <link rel="stylesheet" href="theme.css" />
+  <link rel="stylesheet" href="site.css" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Perch",
+    "operatingSystem": "Android TV, Google TV",
+    "applicationCategory": "MultimediaApplication",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "downloadUrl": "https://github.com/JTCozart/perch-tv/releases/latest/download/perch-tv.apk",
+    "author": { "@type": "Organization", "name": "Cozart Consulting", "url": "https://cozartconsulting.com/" }
+  }
+  </script>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container nav">
+    <a class="brand" href="./" aria-label="Perch home">
+      <svg viewBox="0 0 48 48" aria-hidden="true"><rect width="48" height="48" rx="8" fill="#0B1220"/><rect x="10" y="10" width="12" height="12" fill="#FBBF24"/><circle cx="16" cy="16" r="3" fill="#0B1220"/><rect x="26" y="10" width="12" height="12" fill="#334155"/><rect x="10" y="26" width="12" height="12" fill="#334155"/><rect x="26" y="26" width="12" height="12" fill="#334155"/></svg>
+      <span>Perch</span>
+    </a>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="navLinks">
+      <span></span><span></span><span></span>
+    </button>
+    <nav class="nav-links" id="navLinks">
+      <a href="#features">Features</a>
+      <a href="#cameras">Which cameras</a>
+      <a href="#faq">Questions</a>
+      <a href="install.html">Install guide</a>
+      <a class="nav-cta" href="https://github.com/JTCozart/perch-tv/releases/latest/download/perch-tv.apk">Download</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="container">
+      <div>
+        <p class="eyebrow">For Google TV and Android TV</p>
+        <h1>Every camera around your home, on the TV at once.</h1>
+        <p class="lead">Perch turns your TV into a camera wall. Wired cameras stream straight from your network, up to 16 on a
+          screen, and one press of the remote opens any of them full screen with sound.</p>
+        <div class="hero-cta">
+          <a class="btn btn-light" href="https://github.com/JTCozart/perch-tv/releases/latest/download/perch-tv.apk">Download the app</a>
+          <a class="btn btn-outline-light" href="install.html">How to install it</a>
+        </div>
+        <p class="hero-note">Free. No account, no cloud: video goes from your cameras to your TV and nowhere else.</p>
+      </div>
+      <div class="tv-frame" role="img" aria-label="Drawing of the Perch camera wall with four camera tiles">
+        <div class="wall-grid">
+          <div class="wall-tile focused">
+            <svg class="scene" viewBox="0 0 160 90" preserveAspectRatio="none" aria-hidden="true"><rect width="160" height="50" fill="#1e3a5f"/><rect y="50" width="160" height="40" fill="#334155"/><path d="M60 90 L80 50 L90 50 L120 90 Z" fill="#475569"/><rect x="18" y="24" width="34" height="26" fill="#0f172a"/><path d="M14 26 L35 10 L56 26 Z" fill="#1e293b"/></svg>
+            <span class="label">Driveway</span><span class="live">Live</span>
+          </div>
+          <div class="wall-tile">
+            <svg class="scene" viewBox="0 0 160 90" preserveAspectRatio="none" aria-hidden="true"><rect width="160" height="90" fill="#14532d"/><circle cx="40" cy="38" r="18" fill="#166534"/><circle cx="118" cy="30" r="22" fill="#15803d"/><rect y="66" width="160" height="24" fill="#3f6212"/></svg>
+            <span class="label">Back garden</span><span class="live bridge">Solar, bridge</span>
+          </div>
+          <div class="wall-tile">
+            <svg class="scene" viewBox="0 0 160 90" preserveAspectRatio="none" aria-hidden="true"><rect width="160" height="90" fill="#292524"/><rect x="58" y="16" width="44" height="74" fill="#44403c"/><circle cx="94" cy="56" r="3" fill="#a8a29e"/><rect y="80" width="160" height="10" fill="#57534e"/></svg>
+            <span class="label">Front door</span><span class="live">Live</span>
+          </div>
+          <div class="wall-tile">
+            <svg class="scene" viewBox="0 0 160 90" preserveAspectRatio="none" aria-hidden="true"><rect width="160" height="90" fill="#1f2937"/><rect x="10" y="40" width="60" height="40" fill="#374151"/><rect x="88" y="30" width="62" height="50" fill="#374151"/><rect x="96" y="40" width="20" height="14" fill="#4b5563"/></svg>
+            <span class="label">Garage</span><span class="live">Live</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="features">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">What it does</p>
+        <h2 class="section-title">A security monitor, minus the monitor</h2>
+        <p class="section-sub">Built for the remote and the couch, not squeezed down from a phone app.</p>
+      </div>
+      <div class="grid grid-3">
+        <div class="card">
+          <div class="card-icon"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg></div>
+          <h3>Up to 16 cameras a page</h3>
+          <p>The grid grows from one camera to four by four, and more cameras go on extra pages instead of shrinking past readable.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.55a11 11 0 0 1 14 0"/><path d="M8.5 16.05a6 6 0 0 1 7 0"/><circle cx="12" cy="20" r="1"/></svg></div>
+          <h3>Wired RTSP, straight from the camera</h3>
+          <p>Mains-powered Tapo cameras and other RTSP cameras play directly over your network. Tiles use each camera's light stream; full screen switches to full quality.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg></div>
+          <h3>Room for battery and solar cameras</h3>
+          <p>Battery cameras sleep to save power and most offer no RTSP. Any stream a bridge on your network publishes (go2rtc, Home Assistant, an NVR) can sit on the wall beside them.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg></div>
+          <h3>Reconnects by itself</h3>
+          <p>When a camera drops off Wi-Fi or reboots, its tile says so and keeps trying every few seconds, so the wall heals without you.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 3l-4 4-4-4"/></svg></div>
+          <h3>Knows what your TV can handle</h3>
+          <p>TV boxes can only decode so many videos at once. Perch asks yours, plays as many tiles live as it can, and pauses the rest until you select one.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+          <h3>Passwords stay on the TV</h3>
+          <p>Camera passwords are encrypted with a key held in the TV's own secure storage. There is no account to sign up for and nothing is sent anywhere else.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt" id="cameras">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">Compatibility</p>
+        <h2 class="section-title">Which cameras work</h2>
+        <p class="section-sub">Perch plays standard RTSP and HLS streams. What decides it is whether your camera offers one.</p>
+      </div>
+      <div class="table-scroll">
+        <table class="support-table">
+          <thead>
+            <tr><th>Camera</th><th>Works with Perch</th><th>How</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Wired or plug-in Tapo cameras (for example C100, C200, C210, C310, C320WS, C520WS)</td>
+              <td><span class="tag tag-yes">Yes, directly</span></td>
+              <td>Turn on the camera account in the Tapo app, then add the camera's IP address in Perch. Dual-lens models show either lens.</td>
+            </tr>
+            <tr>
+              <td>Other RTSP cameras and NVRs</td>
+              <td><span class="tag tag-yes">Yes, directly</span></td>
+              <td>Add the camera's RTSP address as a stream.</td>
+            </tr>
+            <tr>
+              <td>Tapo battery and solar cameras (C410, C420, C425, D230 and similar)</td>
+              <td><span class="tag tag-bridge">Only through a bridge</span></td>
+              <td>TP-Link says these models do not offer RTSP, so nothing can play them directly. If a bridge on your network can re-publish one as RTSP or HLS, Perch shows that stream.</td>
+            </tr>
+            <tr>
+              <td>Tapo D225, D235 and TD25 doorbells</td>
+              <td><span class="tag tag-yes">When hardwired</span></td>
+              <td>TP-Link enables RTSP on these only when wired with the jumper cable and set to always on.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="fine-print">Model notes come from TP-Link's own RTSP and ONVIF FAQ and can change with firmware. Check your camera's
+        support page if it is not listed. Perch is an independent app and is not made by, endorsed by or affiliated with
+        TP-Link. Tapo is a trademark of TP-Link.</p>
+    </div>
+  </section>
+
+  <section class="section" id="setup">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">Getting started</p>
+        <h2 class="section-title">On the wall in about ten minutes</h2>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <span class="step-num">1</span>
+          <h3>Install Perch</h3>
+          <p>It is not in the Play Store, so you sideload it once with the free Downloader app or from your phone.</p>
+        </div>
+        <div class="step">
+          <span class="step-num">2</span>
+          <h3>Create a camera account</h3>
+          <p>In the Tapo app, give each camera a camera account. It is separate from your Tapo login and only works on your network.</p>
+        </div>
+        <div class="step">
+          <span class="step-num">3</span>
+          <h3>Add your cameras</h3>
+          <p>Enter each camera's name, IP address and camera account on the TV. They appear on the wall right away.</p>
+        </div>
+        <div class="step">
+          <span class="step-num">4</span>
+          <h3>Sit back</h3>
+          <p>Select any tile for full screen with sound. Left and right step through your cameras; Back returns to the wall.</p>
+        </div>
+      </div>
+      <p style="text-align:center;margin-top:40px"><a class="btn btn-primary" href="install.html">Read the install guide</a></p>
+    </div>
+  </section>
+
+  <section class="section section-alt" id="faq">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">Questions</p>
+        <h2 class="section-title">Good to know</h2>
+      </div>
+      <div class="faq">
+        <details>
+          <summary>Does Perch record video?</summary>
+          <p>No. Perch is a live viewer. Keep recording where it happens today: the camera's SD card, a hub or an NVR.</p>
+        </details>
+        <details>
+          <summary>Can I watch my cameras away from home?</summary>
+          <p>Perch talks to cameras on your home network. Away from home, connect the TV to your network over a VPN. Opening camera ports to the internet is not recommended.</p>
+        </details>
+        <details>
+          <summary>Why are some tiles paused?</summary>
+          <p>Every TV has a limit on how many videos it can decode at once. Perch plays as many as yours supports and pauses the rest. Select a paused tile to watch it full screen.</p>
+        </details>
+        <details>
+          <summary>Why can't Perch play my solar camera directly?</summary>
+          <p>Battery and solar cameras sleep between events to save power, and TP-Link's battery models do not offer RTSP at all. A camera that offers no stream cannot be played by any app except the maker's own. A bridge on your network that can re-publish the camera is the only route.</p>
+        </details>
+        <details>
+          <summary>Does it work on Fire TV or an Android TV box?</summary>
+          <p>Perch runs on Google TV and Android TV 6.0 or newer, which includes most Android TV boxes. Fire TV devices can sideload it the same way; the install guide covers it.</p>
+        </details>
+        <details>
+          <summary>What does it cost?</summary>
+          <p>Nothing. There are no ads, no account and no subscription.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-cta">
+      <h2>Put every camera on the big screen.</h2>
+      <a class="btn btn-primary" href="https://github.com/JTCozart/perch-tv/releases/latest/download/perch-tv.apk">Download Perch</a>
+    </div>
+
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a class="brand" href="./"><svg viewBox="0 0 48 48" aria-hidden="true"><rect width="48" height="48" rx="8" fill="#0B1220"/><rect x="10" y="10" width="12" height="12" fill="#FBBF24"/><circle cx="16" cy="16" r="3" fill="#0B1220"/><rect x="26" y="10" width="12" height="12" fill="#334155"/><rect x="10" y="26" width="12" height="12" fill="#334155"/><rect x="26" y="26" width="12" height="12" fill="#334155"/></svg> <span>Perch</span></a>
+        <p>A free camera wall for Google TV and Android TV that shows every camera around your home at once.</p>
+      </div>
+
+      <nav class="footer-col" aria-label="Perch">
+        <h3>Perch</h3>
+        <ul>
+          <li><a href="install.html">Install guide</a></li>
+          <li><a href="#cameras">Which cameras work</a></li>
+          <li><a href="https://github.com/JTCozart/perch-tv">Source and releases</a></li>
+        </ul>
+      </nav>
+
+      <nav class="footer-col" aria-label="Cozart Consulting">
+        <h3>Cozart Consulting</h3>
+        <ul>
+          <li><a href="https://cozartconsulting.com/">Custom software</a></li>
+          <li><a href="https://cozartconsulting.com/#work">More projects</a></li>
+          <li><a href="https://github.com/JTCozart">GitHub</a></li>
+          <li><a href="https://cozartconsulting.com/#contact">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+
+    <div class="footer-bottom">
+      <span>&copy; <span id="year">2026</span> Perch. Designed and built by <a href="https://cozartconsulting.com/">Cozart Consulting</a>, Knoxville, TN.</span>
+      <span class="theme-credit">Theme adapted from <a href="https://www.figma.com/community/file/1479561357645494407">Housefix</a> by Al Razi Siam, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    var toggle = document.getElementById('navToggle');
+    var links = document.getElementById('navLinks');
+    if (!toggle || !links) return;
+    toggle.addEventListener('click', function () {
+      var open = links.classList.toggle('open');
+      toggle.classList.toggle('open', open);
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    links.querySelectorAll('a').forEach(function (a) {
+      a.addEventListener('click', function () {
+        links.classList.remove('open');
+        toggle.classList.remove('open');
+        toggle.setAttribute('aria-expanded', 'false');
+      });
+    });
+  })();
+</script>
+<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

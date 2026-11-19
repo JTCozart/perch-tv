@@ -1,0 +1,40 @@
+name: Build
+
+# Builds a debug APK on every push to master and every pull request, and keeps it as a downloadable artifact for
+# two weeks. Signed release APKs come only from release.yaml when a version tag is pushed.
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build debug APK
+    runs-on: ubuntu-26.04
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Setup Java
+        uses: actions/setup-java@77dd5b2ce225ea11469928ac317850245a74ae78 # v6.2.0
+        with:
+          distribution: temurin
+          java-version-file: .tools-versions
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@8da46b539cd8fe6ab27ca75128919a18d757604c # v6.4.1
+      - name: Assemble debug APK
+        run: ./gradlew assembleDebug
+      - name: Collect the APK
+        run: |
+          mkdir -p build/apk
+          cp app/build/outputs/apk/debug/*.apk build/apk/perch-tv-debug.apk
+      - name: Upload the APK
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: perch-tv-debug
+          retention-days: 14
+          if-no-files-found: error
+          path: build/apk/perch-tv-debug.apk

@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://jtcozart.github.io/perch-tv/sitemap.xml
