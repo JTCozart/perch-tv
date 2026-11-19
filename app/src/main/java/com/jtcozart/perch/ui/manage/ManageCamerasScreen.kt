@@ -97,5 +97,6 @@ private fun CameraRow(
 
 private fun describe(source: CameraSource): String = when (source) {
 	is CameraSource.TapoRtsp -> "Tapo RTSP at ${source.host}:${source.port}, ${source.lens.name.lowercase()} lens"
+	is CameraSource.TapoLocal -> "Tapo app password at ${source.host}" + (source.deviceId?.let { ", hub camera $it" } ?: "")
 	is CameraSource.BridgeStream -> "Bridge stream ${RedactedUrl.of(source.url)}"
 }

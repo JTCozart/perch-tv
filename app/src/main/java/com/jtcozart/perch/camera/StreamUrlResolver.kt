@@ -1,8 +1,11 @@
 package com.jtcozart.perch.camera
 
+import com.jtcozart.perch.tapo.TapoStreamAddress
+
 object StreamUrlResolver {
 	fun resolve(source: CameraSource, quality: StreamQuality): String = when (source) {
 		is CameraSource.TapoRtsp -> tapoUrl(source, quality)
+		is CameraSource.TapoLocal -> TapoStreamAddress(source.host, source.port, source.tapoPassword, quality, source.deviceId).toUrl()
 		is CameraSource.BridgeStream -> bridgeUrl(source, quality)
 	}
 

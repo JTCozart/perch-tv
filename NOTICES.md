@@ -9,6 +9,10 @@
 | Kotlin standard library, kotlinx.coroutines, kotlinx.serialization | Apache-2.0 |
 | kotest (tests only) | Apache-2.0 |
 
+The Tapo local stream client in `app/src/main/java/com/jtcozart/perch/tapo` is a Kotlin reimplementation of the protocol
+as documented by go2rtc's Tapo client (https://github.com/AlexxIT/go2rtc, `pkg/tapo`), MIT License,
+Copyright (c) 2022 Alexey Khit. No go2rtc code is shipped.
+
 ## Website (`docs/`)
 
 | Component | License |

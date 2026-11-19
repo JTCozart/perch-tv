@@ -4,12 +4,12 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Perch | Every security camera on your Google TV at once</title>
-  <meta name="description" content="Perch is a free camera wall app for Google TV and Android TV. Watch up to 16 RTSP cameras at once, including wired Tapo cameras, and add battery or solar cameras through a bridge." />
+  <meta name="description" content="Perch is a free camera wall app for Google TV and Android TV. Watch up to 16 RTSP cameras at once, including wired Tapo cameras and, experimentally, Tapo battery and solar cameras." />
   <link rel="canonical" href="https://jtcozart.github.io/perch-tv/" />
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
   <meta name="theme-color" content="#00296c" />
   <meta property="og:title" content="Perch: every camera on your TV at once" />
-  <meta property="og:description" content="A free camera wall for Google TV and Android TV. Wired RTSP cameras play directly; battery and solar cameras join through a bridge." />
+  <meta property="og:description" content="A free camera wall for Google TV and Android TV. Wired RTSP cameras play directly, and Tapo battery and solar cameras can join with your Tapo app password." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://jtcozart.github.io/perch-tv/" />
   <link rel="stylesheet" href="theme.css" />
@@ -70,7 +70,7 @@
           </div>
           <div class="wall-tile">
             <svg class="scene" viewBox="0 0 160 90" preserveAspectRatio="none" aria-hidden="true"><rect width="160" height="90" fill="#14532d"/><circle cx="40" cy="38" r="18" fill="#166534"/><circle cx="118" cy="30" r="22" fill="#15803d"/><rect y="66" width="160" height="24" fill="#3f6212"/></svg>
-            <span class="label">Back garden</span><span class="live bridge">Solar, bridge</span>
+            <span class="label">Back garden</span><span class="live bridge">Solar</span>
           </div>
           <div class="wall-tile">
             <svg class="scene" viewBox="0 0 160 90" preserveAspectRatio="none" aria-hidden="true"><rect width="160" height="90" fill="#292524"/><rect x="58" y="16" width="44" height="74" fill="#44403c"/><circle cx="94" cy="56" r="3" fill="#a8a29e"/><rect y="80" width="160" height="10" fill="#57534e"/></svg>
@@ -106,7 +106,7 @@
         <div class="card">
           <div class="card-icon"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg></div>
           <h3>Room for battery and solar cameras</h3>
-          <p>Battery cameras sleep to save power and most offer no RTSP. Any stream a bridge on your network publishes (go2rtc, Home Assistant, an NVR) can sit on the wall beside them.</p>
+          <p>Tapo battery and solar cameras offer no RTSP, so Perch talks to them the way the Tapo app does at home, with your Tapo app password. Experimental. Any stream a bridge publishes (go2rtc, Home Assistant, an NVR) works too.</p>
         </div>
         <div class="card">
           <div class="card-icon"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg></div>
@@ -152,8 +152,8 @@
             </tr>
             <tr>
               <td>Tapo battery and solar cameras (C410, C420, C425, D230 and similar)</td>
-              <td><span class="tag tag-bridge">Only through a bridge</span></td>
-              <td>TP-Link says these models do not offer RTSP, so nothing can play them directly. If a bridge on your network can re-publish one as RTSP or HLS, Perch shows that stream.</td>
+              <td><span class="tag tag-bridge">Experimental</span></td>
+              <td>These models offer no RTSP. Choose <strong>Tapo app password</strong> and Perch connects the way the Tapo app does on your home network. No sound yet, and a firmware update can stop it working. A bridge is the fallback.</td>
             </tr>
             <tr>
               <td>Tapo D225, D235 and TD25 doorbells</td>
@@ -221,8 +221,8 @@
           <p>Every TV has a limit on how many videos it can decode at once. Perch plays as many as yours supports and pauses the rest. Select a paused tile to watch it full screen.</p>
         </details>
         <details>
-          <summary>Why can't Perch play my solar camera directly?</summary>
-          <p>Battery and solar cameras sleep between events to save power, and TP-Link's battery models do not offer RTSP at all. A camera that offers no stream cannot be played by any app except the maker's own. A bridge on your network that can re-publish the camera is the only route.</p>
+          <summary>How does Perch play a solar camera with no RTSP?</summary>
+          <p>Tapo cameras also speak TP-Link's own protocol on your home network, the one the Tapo app uses when you are at home. Perch signs in to it with your Tapo app password. TP-Link does not document or support it, so treat it as experimental: a firmware update can change it. A battery camera kept on a live wall wakes up and stays awake, so it uses far more battery than usual.</p>
         </details>
         <details>
           <summary>Does it work on Fire TV or an Android TV box?</summary>

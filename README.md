@@ -4,8 +4,9 @@ A camera wall for Google TV and Android TV. Perch shows up to 16 security camera
 with sound, and reconnects dropped cameras by itself.
 
 - **Wired RTSP cameras** play directly: mains-powered Tapo cameras through their camera account, or any other RTSP camera.
-- **Battery and solar cameras** that offer no RTSP of their own (TP-Link lists the Tapo C410, C420, C425 and D230) can
-  join the wall only through a bridge on the network that re-publishes them as RTSP or HLS.
+- **Tapo battery and solar cameras** that offer no RTSP (TP-Link lists the C410, C420, C425 and D230) play over TP-Link's
+  own local protocol, signed in with the Tapo app password. Experimental: undocumented protocol, no sound yet.
+- **Bridge streams**: any RTSP or HLS address another box re-publishes (go2rtc, Home Assistant, an NVR).
 
 Website and install guide: https://jtcozart.github.io/perch-tv/
 
@@ -25,6 +26,7 @@ Needs JDK 21 and the Android SDK (compile SDK 37).
 | Path | What it holds |
 | --- | --- |
 | `app/src/main/java/com/jtcozart/perch/camera` | Camera model, stream URL rules, form validation. Plain Kotlin, unit tested. |
+| `app/src/main/java/com/jtcozart/perch/tapo` | Tapo local stream protocol: digest sign-in, key exchange, decryption of the MPEG-TS parts. Unit tested against a fake camera. |
 | `app/src/main/java/com/jtcozart/perch/wall` | Grid planning and the device decoder budget. |
 | `app/src/main/java/com/jtcozart/perch/storage` | Camera list, encrypted with an Android Keystore key. |
 | `app/src/main/java/com/jtcozart/perch/ui` | Compose screens: wall, full screen, camera list, add and edit. |

@@ -81,7 +81,7 @@ fun StatusBadge(status: VideoStatus, modifier: Modifier = Modifier) {
 	val color = when (status) {
 		VideoStatus.Live -> PerchColors.Live
 		VideoStatus.Connecting -> PerchColors.TextMuted
-		VideoStatus.Offline -> PerchColors.Problem
+		VideoStatus.Offline, VideoStatus.PasswordRefused -> PerchColors.Problem
 	}
 	Text(
 		text = status.label,

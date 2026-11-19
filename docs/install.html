@@ -157,12 +157,24 @@ adb connect 192.168.1.50:5555</pre></li>
       a lower-quality stream, put that in <strong>Tile stream address</strong>.</p>
 
     <h2 id="solar">Battery and solar cameras</h2>
+    <p>TP-Link's FAQ says the C410, C420, C425 and D230 do not support RTSP. Perch can still reach them the way the Tapo
+      app does on your home network:</p>
+    <ol>
+      <li>Find the camera's IP address in the camera's device information in the Tapo app, or in your router's list of
+        connected devices. Give it a fixed address in your router if you can.</li>
+      <li>In the Tapo app, turn on <strong>Third-Party Compatibility</strong> (Me, then Third-Party Services; on older
+        app versions it is under Tapo Lab). It can take a few minutes, or a camera restart, before the camera accepts
+        other apps.</li>
+      <li>In Perch, open <strong>Cameras</strong>, then <strong>Add a camera</strong>, and choose <strong>Tapo app password</strong>.</li>
+      <li>Enter a name, the camera's IP address and the password you use to sign in to the Tapo app. Leave
+        <strong>Hub device ID</strong> empty unless the camera is paired to a Tapo hub.</li>
+    </ol>
     <div class="callout warning">
-      <strong>Tapo battery and solar models cannot be played directly.</strong> TP-Link's FAQ says the C410, C420, C425 and
-      D230 do not support RTSP, because streaming all the time would drain the battery. This applies to every app, not
-      just Perch.
+      <strong>Experimental.</strong> This is TP-Link's own undocumented protocol, so a camera firmware update can stop it
+      working. There is no sound on these cameras yet. A battery camera on a live wall stays awake and drains far faster
+      than usual. The TV must be on the same network as the camera; this does not work over the internet.
     </div>
-    <p>What you can do:</p>
+    <p>Other ways in:</p>
     <ul>
       <li><strong>Use a bridge.</strong> If something on your network can re-publish the camera as an RTSP or HLS stream,
         add that address in Perch with <strong>Stream from a bridge</strong>. Tools such as go2rtc and Home Assistant

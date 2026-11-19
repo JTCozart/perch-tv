@@ -11,6 +11,7 @@ data class CameraForm(
 	val lens: Lens = Lens.Wide,
 	val streamUrl: String = "",
 	val subStreamUrl: String = "",
+	val hubDeviceId: String = "",
 ) {
 	companion object {
 		fun from(camera: Camera): CameraForm = when (val source = camera.source) {
@@ -22,6 +23,13 @@ data class CameraForm(
 				username = source.username,
 				password = source.password,
 				lens = source.lens,
+			)
+			is CameraSource.TapoLocal -> CameraForm(
+				kind = CameraKind.TapoLocal,
+				name = camera.name,
+				host = source.host,
+				password = source.tapoPassword,
+				hubDeviceId = source.deviceId.orEmpty(),
 			)
 			is CameraSource.BridgeStream -> CameraForm(
 				kind = CameraKind.BridgeStream,

@@ -12,6 +12,12 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.rtsp.RtspMediaSource
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
 import androidx.media3.exoplayer.source.MediaSource
+import androidx.media3.exoplayer.source.ProgressiveMediaSource
+import androidx.media3.exoplayer.upstream.DefaultLoadErrorHandlingPolicy
+import androidx.media3.exoplayer.upstream.LoadErrorHandlingPolicy
+import androidx.media3.extractor.DefaultExtractorsFactory
+import androidx.media3.extractor.ts.DefaultTsPayloadReaderFactory
+import com.jtcozart.perch.tapo.TapoStreamAddress
 
 /** Builds a player tuned for a live camera: short buffers so the picture stays close to real time. */
 object CameraPlayerFactory {
@@ -39,9 +45,22 @@ object CameraPlayerFactory {
 			}
 	}
 
+	private object NoRetryLoadErrorPolicy : DefaultLoadErrorHandlingPolicy() {
+		override fun getRetryDelayMsFor(loadErrorInfo: LoadErrorHandlingPolicy.LoadErrorInfo): Long = C.TIME_UNSET
+	}
+
 	private fun mediaSourceFor(context: Context, url: String): MediaSource {
 		val item = MediaItem.fromUri(url)
-		return if (url.startsWith("rtsp", ignoreCase = true)) {
+		return if (url.startsWith("${TapoStreamAddress.SCHEME}://", ignoreCase = true)) {
+			// One PES packet is one frame, as go2rtc reads Tapo streams. A keyframe is any frame with an I slice, because
+			// camera encoders do not always send IDR frames.
+			val extractors = DefaultExtractorsFactory().setTsExtractorFlags(DefaultTsPayloadReaderFactory.FLAG_ALLOW_NON_IDR_KEYFRAMES)
+			// No loader retries: a retry reopens mid-stream and would splice a new session onto the old one.
+			// CameraVideo reconnects with a fresh player instead.
+			ProgressiveMediaSource.Factory(TapoDataSource.Factory(), extractors)
+				.setLoadErrorHandlingPolicy(NoRetryLoadErrorPolicy)
+				.createMediaSource(item)
+		} else if (url.startsWith("rtsp", ignoreCase = true)) {
 			// Interleaved TCP: UDP RTP is often dropped by Wi-Fi access points and mesh systems.
 			RtspMediaSource.Factory()
 				.setForceUseRtpTcp(true)

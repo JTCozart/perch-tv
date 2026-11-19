@@ -45,4 +45,10 @@ class StreamUrlResolverTests : FunSpec({
 		StreamUrlResolver.resolve(source, StreamQuality.Sub) shouldBe "rtsp://10.0.0.5:8554/yard_sub"
 		StreamUrlResolver.resolve(source, StreamQuality.Main) shouldBe "rtsp://10.0.0.5:8554/yard"
 	}
+
+	test("ATapoAppPasswordCameraPlaysOverTheTapoProtocol_VgaOnTilesAndHdFullScreen") {
+		val source = CameraSource.TapoLocal(host = "192.168.1.50", tapoPassword = "tapo-pass1")
+		StreamUrlResolver.resolve(source, StreamQuality.Sub) shouldBe "tapo://tapo-pass1@192.168.1.50:8800/?quality=sub"
+		StreamUrlResolver.resolve(source, StreamQuality.Main) shouldBe "tapo://tapo-pass1@192.168.1.50:8800/?quality=main"
+	}
 })

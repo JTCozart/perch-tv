@@ -21,6 +21,19 @@ sealed interface CameraSource {
 	) : CameraSource
 
 	/**
+	 * A Tapo camera reached over TP-Link's own local protocol on port 8800 with the Tapo app password. This is the
+	 * route for battery and solar models with no RTSP. [deviceId] picks a camera paired to a hub, at the hub's address.
+	 */
+	@Serializable
+	@SerialName("tapo-local")
+	data class TapoLocal(
+		val host: String,
+		val tapoPassword: String,
+		val port: Int = DEFAULT_TAPO_LOCAL_PORT,
+		val deviceId: String? = null,
+	) : CameraSource
+
+	/**
 	 * Any stream another box on the network re-publishes (go2rtc, Home Assistant, an NVR). This is the route for
 	 * cameras that cannot be played directly, such as battery and solar models with no RTSP of their own.
 	 */
@@ -33,5 +46,6 @@ sealed interface CameraSource {
 
 	companion object {
 		const val DEFAULT_RTSP_PORT = 554
+		const val DEFAULT_TAPO_LOCAL_PORT = 8800
 	}
 }

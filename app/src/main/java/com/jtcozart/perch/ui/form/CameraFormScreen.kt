@@ -84,6 +84,11 @@ fun CameraFormScreen(
 				isPrimary = form.kind == CameraKind.TapoRtsp,
 			)
 			PerchButton(
+				label = "Tapo app password",
+				onClick = { form = form.copy(kind = CameraKind.TapoLocal) },
+				isPrimary = form.kind == CameraKind.TapoLocal,
+			)
+			PerchButton(
 				label = "Stream from a bridge",
 				onClick = { form = form.copy(kind = CameraKind.BridgeStream) },
 				isPrimary = form.kind == CameraKind.BridgeStream,
@@ -93,6 +98,7 @@ fun CameraFormScreen(
 
 		when (form.kind) {
 			CameraKind.TapoRtsp -> TapoFields(form) { form = it }
+			CameraKind.TapoLocal -> TapoLocalFields(form) { form = it }
 			CameraKind.BridgeStream -> BridgeFields(form) { form = it }
 		}
 
@@ -121,7 +127,7 @@ fun CameraFormScreen(
 private fun TapoFields(form: CameraForm, onChange: (CameraForm) -> Unit) {
 	Text(
 		"Use the camera account, not your Tapo login. Create it in the Tapo app: open the camera, then " +
-			"Settings, Advanced Settings, Camera Account. Battery and solar Tapo models have no RTSP; add those through a bridge.",
+			"Settings, Advanced Settings, Camera Account. Battery and solar Tapo models have no RTSP; add those with Tapo app password instead.",
 		color = PerchColors.TextMuted,
 		modifier = Modifier.width(fieldWidth * 1.6f),
 	)
@@ -134,6 +140,23 @@ private fun TapoFields(form: CameraForm, onChange: (CameraForm) -> Unit) {
 	Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
 		PerchButton("Main lens", { onChange(form.copy(lens = Lens.Wide)) }, isPrimary = form.lens == Lens.Wide)
 		PerchButton("Telephoto lens (dual-lens models)", { onChange(form.copy(lens = Lens.Telephoto)) }, isPrimary = form.lens == Lens.Telephoto)
+	}
+}
+
+@Composable
+private fun TapoLocalFields(form: CameraForm, onChange: (CameraForm) -> Unit) {
+	Text(
+		"For battery and solar Tapo cameras, and any Tapo camera without a camera account. Perch talks to the camera " +
+			"the way the Tapo app does at home, so it signs in with the password of your Tapo app login. The camera " +
+			"must be on the same network as this TV, and Third-Party Compatibility must be on in the Tapo app (Me, Third-Party " +
+			"Services). Experimental: a camera firmware update can stop it working.",
+		color = PerchColors.TextMuted,
+		modifier = Modifier.width(fieldWidth * 1.6f),
+	)
+	TextInput("Camera IP address, such as 192.168.1.50", form.host, keyboardType = KeyboardType.Uri) { onChange(form.copy(host = it)) }
+	TextInput("Tapo app password", form.password, isSecret = true) { onChange(form.copy(password = it)) }
+	TextInput("Hub device ID (only for a camera paired to a hub; then enter the hub's address above)", form.hubDeviceId, width = fieldWidth * 1.6f) {
+		onChange(form.copy(hubDeviceId = it))
 	}
 }
 

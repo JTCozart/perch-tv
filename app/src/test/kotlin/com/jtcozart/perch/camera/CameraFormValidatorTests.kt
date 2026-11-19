@@ -68,4 +68,42 @@ class CameraFormValidatorTests : FunSpec({
 		val camera = Camera(id = "a", name = "Driveway", source = CameraSource.TapoRtsp(host = "192.168.1.40", port = 8554, username = "camuser", password = "secret99", lens = Lens.Telephoto))
 		CameraForm.from(camera) shouldBe tapoForm(port = "8554").copy(lens = Lens.Telephoto)
 	}
+
+	fun tapoLocalForm(host: String = "192.168.1.50", password: String = "tapo-pass1", deviceId: String = "") =
+		CameraForm(kind = CameraKind.TapoLocal, name = "Porch", host = host, password = password, hubDeviceId = deviceId)
+
+	test("ACompleteTapoAppPasswordFormHasNoProblems") {
+		CameraFormValidator.problemsWith(tapoLocalForm()).shouldBeEmpty()
+	}
+
+	test("ATapoAppPasswordCameraNeedsAnAddressAndThePassword") {
+		CameraFormValidator.problemsWith(tapoLocalForm(host = "", password = "")) shouldContainExactly
+			listOf(FormProblem.HostMissing, FormProblem.TapoPasswordMissing)
+	}
+
+	test("AnAddressWithAPortTypedOnIsRefused") {
+		CameraFormValidator.problemsWith(tapoLocalForm(host = "192.168.1.50:8800")) shouldContainExactly listOf(FormProblem.HostInvalid)
+		CameraFormValidator.problemsWith(tapoForm(host = "192.168.1.40:554")) shouldContainExactly listOf(FormProblem.HostInvalid)
+	}
+
+	test("AnIpv6AddressIsStillAccepted") {
+		CameraFormValidator.problemsWith(tapoLocalForm(host = "fd00::40")).shouldBeEmpty()
+	}
+
+	test("AHubDeviceIdIsLettersAndDigitsOnly") {
+		CameraFormValidator.problemsWith(tapoLocalForm(deviceId = "80 22/AB")) shouldContainExactly listOf(FormProblem.DeviceIdInvalid)
+	}
+
+	test("ATapoAppPasswordFormBecomesACameraOnPort8800_WithNoDeviceIdWhenLeftEmpty") {
+		CameraFormValidator.toCamera(tapoLocalForm(), id = "p") shouldBe Camera(
+			id = "p",
+			name = "Porch",
+			source = CameraSource.TapoLocal(host = "192.168.1.50", tapoPassword = "tapo-pass1"),
+		)
+	}
+
+	test("ATapoAppPasswordCameraRoundTripsThroughTheForm") {
+		val camera = Camera(id = "p", name = "Porch", source = CameraSource.TapoLocal(host = "192.168.1.50", tapoPassword = "tapo-pass1", deviceId = "80223AB1"))
+		CameraFormValidator.toCamera(CameraForm.from(camera), id = "p") shouldBe camera
+	}
 })
