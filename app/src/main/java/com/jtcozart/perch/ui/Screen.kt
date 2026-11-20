@@ -7,4 +7,7 @@ sealed interface Screen {
 
 	/** [cameraId] is null when adding a new camera. */
 	data class EditCamera(val cameraId: String?) : Screen
+
+	/** Adds a new camera that starts as a copy of [sourceCameraId]. */
+	data class DuplicateCamera(val sourceCameraId: String) : Screen
 }

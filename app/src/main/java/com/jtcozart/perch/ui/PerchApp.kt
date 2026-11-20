@@ -32,7 +32,7 @@ fun PerchApp(repository: CameraRepository, liveTileLimit: Int, onCheckForUpdates
 
 	BackHandler(enabled = screen != Screen.Wall) {
 		screen = when (screen) {
-			is Screen.EditCamera -> Screen.ManageCameras
+			is Screen.EditCamera, is Screen.DuplicateCamera -> Screen.ManageCameras
 			else -> Screen.Wall
 		}
 	}
@@ -58,6 +58,7 @@ fun PerchApp(repository: CameraRepository, liveTileLimit: Int, onCheckForUpdates
 					cameras = cameras,
 					onAddCamera = { screen = Screen.EditCamera(cameraId = null) },
 					onEditCamera = { screen = Screen.EditCamera(it.id) },
+					onDuplicateCamera = { screen = Screen.DuplicateCamera(it.id) },
 					onMoveCamera = { camera, offset -> scope.launch { repository.move(camera.id, offset) } },
 					onDeleteCamera = { camera -> scope.launch { repository.delete(camera.id) } },
 					onCheckForUpdates = onCheckForUpdates,
@@ -71,6 +72,22 @@ fun PerchApp(repository: CameraRepository, liveTileLimit: Int, onCheckForUpdates
 						isNew = existing == null,
 						onSave = { form ->
 							val camera = CameraFormValidator.toCamera(form, id = existing?.id ?: UUID.randomUUID().toString())
+							scope.launch {
+								repository.save(camera)
+								screen = Screen.ManageCameras
+							}
+						},
+						onCancel = { screen = Screen.ManageCameras },
+					)
+				}
+
+				is Screen.DuplicateCamera -> {
+					val source = cameras.firstOrNull { it.id == current.sourceCameraId }
+					CameraFormScreen(
+						initialForm = source?.let(CameraForm::copyOf) ?: CameraForm(),
+						isNew = true,
+						onSave = { form ->
+							val camera = CameraFormValidator.toCamera(form, id = UUID.randomUUID().toString())
 							scope.launch {
 								repository.save(camera)
 								screen = Screen.ManageCameras

@@ -14,6 +14,11 @@ data class CameraForm(
 	val hubDeviceId: String = "",
 ) {
 	companion object {
+		private const val COPY_SUFFIX = " copy"
+
+		/** A new camera set up like [camera], so cameras on the same account only need a new name and address. */
+		fun copyOf(camera: Camera): CameraForm = from(camera).copy(name = camera.name + COPY_SUFFIX)
+
 		fun from(camera: Camera): CameraForm = when (val source = camera.source) {
 			is CameraSource.TapoRtsp -> CameraForm(
 				kind = CameraKind.TapoRtsp,

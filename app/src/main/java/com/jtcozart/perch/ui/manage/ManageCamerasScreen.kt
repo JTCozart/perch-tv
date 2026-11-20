@@ -36,6 +36,7 @@ fun ManageCamerasScreen(
 	cameras: List<Camera>,
 	onAddCamera: () -> Unit,
 	onEditCamera: (Camera) -> Unit,
+	onDuplicateCamera: (Camera) -> Unit,
 	onMoveCamera: (Camera, Int) -> Unit,
 	onDeleteCamera: (Camera) -> Unit,
 	onCheckForUpdates: () -> Unit,
@@ -61,7 +62,7 @@ fun ManageCamerasScreen(
 		)
 		LazyColumn(verticalArrangement = Arrangement.spacedBy(10.dp)) {
 			items(cameras, key = { it.id }) { camera ->
-				CameraRow(camera, onEditCamera, onMoveCamera, onDeleteCamera)
+				CameraRow(camera, onEditCamera, onDuplicateCamera, onMoveCamera, onDeleteCamera)
 			}
 		}
 	}
@@ -71,6 +72,7 @@ fun ManageCamerasScreen(
 private fun CameraRow(
 	camera: Camera,
 	onEditCamera: (Camera) -> Unit,
+	onDuplicateCamera: (Camera) -> Unit,
 	onMoveCamera: (Camera, Int) -> Unit,
 	onDeleteCamera: (Camera) -> Unit,
 ) {
@@ -89,6 +91,7 @@ private fun CameraRow(
 			Text(describe(camera.source), style = MaterialTheme.typography.bodySmall, color = PerchColors.TextMuted)
 		}
 		PerchButton("Edit", { onEditCamera(camera) })
+		PerchButton("Duplicate", { onDuplicateCamera(camera) })
 		PerchButton("Move up", { onMoveCamera(camera, -1) })
 		PerchButton("Move down", { onMoveCamera(camera, 1) })
 		PerchButton(
