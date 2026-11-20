@@ -41,6 +41,16 @@ class TapoStreamSessionTests : FunSpec({
 		}
 	}
 
+	test("OnceMd5HasWorked_TheCameraIsNotOfferedAFailingSha256AttemptAgain_SoItDoesNotLockUs") {
+		FakeTapoCamera("tapo-pass1", segments, hashing = FakeTapoCamera.Hashing.Sha256AdvertisedMd5Accepted).use { camera ->
+			TapoStreamSession.open(addressOf(camera)).use { readAll(it) }
+			TapoStreamSession.open(addressOf(camera)).use { session ->
+				readAll(session) shouldBe segments.map { it.toList() }
+			}
+			camera.connections shouldBe 3
+		}
+	}
+
 	test("AWrongPasswordFailsWithItsOwnError_SoThePlayerStopsRetryingIt") {
 		FakeTapoCamera("tapo-pass1", segments).use { camera ->
 			val error = shouldThrow<TapoPasswordRefusedException> { TapoStreamSession.open(addressOf(camera, password = "wrong-one")) }

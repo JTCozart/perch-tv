@@ -19,13 +19,15 @@ class LiveTapoCameraTests : FunSpec({
 			TapoStreamSession.open(address).use { session ->
 				val segments = List(SEGMENTS_TO_READ) { session.nextVideoSegment() }
 				println("live $quality: ${segments.count { it != null }} segments, ${segments.sumOf { it?.size ?: 0 }} bytes")
+				// Kept on this computer so the stream's codecs can be inspected with ffprobe
+				java.io.File("build/live-tapo-${quality.name.lowercase()}.ts").writeBytes(segments.filterNotNull().fold(ByteArray(0)) { all, part -> all + part })
 				segments.all { it != null && it.first() == MPEG_TS_SYNC_BYTE } shouldBe true
 			}
 		}
 	}
 }) {
 	private companion object {
-		const val SEGMENTS_TO_READ = 20
+		const val SEGMENTS_TO_READ = 200
 		const val MPEG_TS_SYNC_BYTE: Byte = 0x47
 	}
 }

@@ -22,6 +22,7 @@ class TapoStreamSession private constructor(
 	private val socket: Socket,
 	private val cipher: TapoSegmentCipher,
 	private val parts: MultipartPartReader,
+	private val acceptedMethod: TapoPasswordHash.Method,
 ) : Closeable {
 	/** The next decrypted MPEG-TS chunk, or null when the camera ends the stream. Blocks until one arrives. */
 	fun nextVideoSegment(): ByteArray? {
@@ -48,12 +49,22 @@ class TapoStreamSession private constructor(
 		 * Some firmware (C410 1.3.5) asks for the SHA-256 hash but only accepts MD5, so a refused SHA-256 sign-in is tried
 		 * once more with MD5 on a fresh connection, as pytapo does.
 		 */
-		fun open(address: TapoStreamAddress): TapoStreamSession = try {
+		fun open(address: TapoStreamAddress): TapoStreamSession {
+			// Every refused sign-in counts towards the camera's lockout, so the hash a camera accepted is reused.
+			val cameraKey = "${address.host}:${address.port}/${address.deviceId.orEmpty()}"
+			val session = acceptedMethods[cameraKey]?.let { openWith(address, forcedMethod = it) } ?: openTryingBothHashes(address)
+			acceptedMethods[cameraKey] = session.acceptedMethod
+			return session
+		}
+
+		private fun openTryingBothHashes(address: TapoStreamAddress): TapoStreamSession = try {
 			openWith(address, forcedMethod = null)
 		} catch (refused: TapoPasswordRefusedException) {
 			if (refused.method != TapoPasswordHash.Method.Sha256) throw refused
 			openWith(address, forcedMethod = TapoPasswordHash.Method.Md5)
 		}
+
+		private val acceptedMethods = java.util.concurrent.ConcurrentHashMap<String, TapoPasswordHash.Method>()
 
 		private fun openWith(address: TapoStreamAddress, forcedMethod: TapoPasswordHash.Method?): TapoStreamSession {
 			val socket = Socket()
@@ -64,10 +75,10 @@ class TapoStreamSession private constructor(
 				val input = BufferedInputStream(socket.getInputStream())
 				val output = BufferedOutputStream(socket.getOutputStream())
 
-				val cipher = signIn(address, forcedMethod, input, output)
+				val (cipher, method) = signIn(address, forcedMethod, input, output)
 				output.write(TapoPreviewRequest.part(address))
 				output.flush()
-				return TapoStreamSession(socket, cipher, MultipartPartReader(input))
+				return TapoStreamSession(socket, cipher, MultipartPartReader(input), method)
 			} catch (error: IOException) {
 				socket.close()
 				throw error as? TapoStreamException ?: TapoStreamException("could not reach the camera at ${address.host}:${address.port}", error)
@@ -79,7 +90,7 @@ class TapoStreamSession private constructor(
 			forcedMethod: TapoPasswordHash.Method?,
 			input: InputStream,
 			output: OutputStream,
-		): TapoSegmentCipher {
+		): Pair<TapoSegmentCipher, TapoPasswordHash.Method> {
 			val challengeResponse = exchange(address, authorization = null, input, output)
 			val challenge = challengeResponse.headers["www-authenticate"]
 			if (challengeResponse.statusCode != HTTP_UNAUTHORIZED || challenge?.startsWith("Digest", ignoreCase = true) != true) {
@@ -105,7 +116,7 @@ class TapoStreamSession private constructor(
 			}
 			val keyExchange = streamResponse.headers["key-exchange"] ?: throw TapoStreamException("camera sent no Key-Exchange header")
 			// The video is keyed with the hash the camera accepted, whatever its Key-Exchange header advertises (pytapo).
-			return TapoSegmentCipher.from(keyExchange, hashedPassword)
+			return TapoSegmentCipher.from(keyExchange, hashedPassword) to method
 		}
 
 		private fun exchange(address: TapoStreamAddress, authorization: String?, input: InputStream, output: OutputStream): HttpResponseHead {

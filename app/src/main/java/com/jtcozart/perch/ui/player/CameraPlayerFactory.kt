@@ -52,9 +52,12 @@ object CameraPlayerFactory {
 	private fun mediaSourceFor(context: Context, url: String): MediaSource {
 		val item = MediaItem.fromUri(url)
 		return if (url.startsWith("${TapoStreamAddress.SCHEME}://", ignoreCase = true)) {
-			// One PES packet is one frame, as go2rtc reads Tapo streams. A keyframe is any frame with an I slice, because
-			// camera encoders do not always send IDR frames.
-			val extractors = DefaultExtractorsFactory().setTsExtractorFlags(DefaultTsPayloadReaderFactory.FLAG_ALLOW_NON_IDR_KEYFRAMES)
+			// Real Tapo cameras send no access unit delimiters, so frame boundaries must be found from the slice headers;
+			// without that no frame is ever produced. A keyframe is any frame with an I slice, because camera encoders do
+			// not always send IDR frames.
+			val extractors = DefaultExtractorsFactory().setTsExtractorFlags(
+				DefaultTsPayloadReaderFactory.FLAG_ALLOW_NON_IDR_KEYFRAMES or DefaultTsPayloadReaderFactory.FLAG_DETECT_ACCESS_UNITS,
+			)
 			// No loader retries: a retry reopens mid-stream and would splice a new session onto the old one.
 			// CameraVideo reconnects with a fresh player instead.
 			ProgressiveMediaSource.Factory(TapoDataSource.Factory(), extractors)
