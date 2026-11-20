@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The folder of downloaded updates that the package installer is allowed to read -->
+<paths>
+	<cache-path name="updates" path="updates/" />
+</paths>

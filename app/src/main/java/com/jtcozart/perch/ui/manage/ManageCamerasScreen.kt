@@ -38,6 +38,7 @@ fun ManageCamerasScreen(
 	onEditCamera: (Camera) -> Unit,
 	onMoveCamera: (Camera, Int) -> Unit,
 	onDeleteCamera: (Camera) -> Unit,
+	onCheckForUpdates: () -> Unit,
 	onDone: () -> Unit,
 ) {
 	val addButton = remember { FocusRequester() }
@@ -48,6 +49,8 @@ fun ManageCamerasScreen(
 			Text("Cameras", style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold, color = PerchColors.Text)
 			Spacer(Modifier.weight(1f))
 			PerchButton("Add a camera", onAddCamera, Modifier.focusRequester(addButton), isPrimary = true)
+			Spacer(Modifier.padding(start = 12.dp))
+			PerchButton("Check for updates", onCheckForUpdates)
 			Spacer(Modifier.padding(start = 12.dp))
 			PerchButton("Back to the wall", onDone)
 		}

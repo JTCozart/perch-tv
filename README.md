@@ -27,6 +27,7 @@ Needs JDK 21 and the Android SDK (compile SDK 37).
 | --- | --- |
 | `app/src/main/java/com/jtcozart/perch/camera` | Camera model, stream URL rules, form validation. Plain Kotlin, unit tested. |
 | `app/src/main/java/com/jtcozart/perch/tapo` | Tapo local stream protocol: digest sign-in, key exchange, decryption of the MPEG-TS parts. Unit tested against a fake camera. |
+| `app/src/main/java/com/jtcozart/perch/update` | Update check on launch: reads the latest GitHub release, downloads `perch-tv.apk`, verifies it against `SHA256SUMS`, hands it to the system installer. Unit tested. |
 | `app/src/main/java/com/jtcozart/perch/wall` | Grid planning and the device decoder budget. |
 | `app/src/main/java/com/jtcozart/perch/storage` | Camera list, encrypted with an Android Keystore key. |
 | `app/src/main/java/com/jtcozart/perch/ui` | Compose screens: wall, full screen, camera list, add and edit. |
@@ -44,6 +45,14 @@ Pushing a tag such as `v0.1.0` (or `v0.1.0-rc.1` for a pre-release) runs `.githu
 tests, builds a signed APK and publishes `perch-tv.apk` plus `SHA256SUMS` as a GitHub release. The website links to
 `releases/latest/download/perch-tv.apk`. The workflow needs the `PERCH_KEYSTORE` (base64), `PERCH_KEYSTORE_PASSWORD`,
 `PERCH_KEY_ALIAS` and `PERCH_KEY_PASSWORD` secrets.
+
+## Updates
+
+On launch, release builds ask GitHub for the latest stable release and offer it when it is newer than the installed
+version. The APK is checked against the release's `SHA256SUMS` before Android's installer opens, and Android still asks
+the viewer to confirm. The first time, Android sends the viewer to the "Install unknown apps" setting for Perch. Local
+builds (version name ending in `-dev`) never check. **Cameras > Check for updates** runs the check on demand. Pre-releases
+(`-rc` tags) are never offered.
 
 ## License
 

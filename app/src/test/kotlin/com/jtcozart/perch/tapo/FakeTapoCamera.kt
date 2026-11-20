@@ -20,8 +20,11 @@ import kotlin.concurrent.thread
 class FakeTapoCamera(
 	private val tapoPassword: String,
 	private val segments: List<ByteArray>,
-	private val usesSha256: Boolean = false,
+	private val hashing: Hashing = Hashing.Md5,
 ) : AutoCloseable {
+	/** How the camera's firmware hashes the Tapo password, including the C410 1.3.5 kind that asks for one and wants the other. */
+	enum class Hashing { Md5, Sha256, Sha256AdvertisedMd5Accepted }
+
 	private val server = ServerSocket(0, 1, InetAddress.getLoopbackAddress())
 	val port: Int get() = server.localPort
 
@@ -31,14 +34,20 @@ class FakeTapoCamera(
 	@Volatile var previewRequest: String? = null
 		private set
 
+	@Volatile var connections = 0
+		private set
+
 	init {
-		thread(isDaemon = true) { runCatching { serveOneClient() } }
+		thread(isDaemon = true) {
+			while (!server.isClosed) runCatching { serveOneClient() }
+		}
 	}
 
 	override fun close() = server.close()
 
 	private fun serveOneClient() {
 		server.accept().use { socket ->
+			connections++
 			val input = BufferedInputStream(socket.getInputStream())
 			val output = socket.getOutputStream()
 
@@ -65,14 +74,17 @@ class FakeTapoCamera(
 		}
 	}
 
+	private val advertisesSha256: Boolean get() = hashing != Hashing.Md5
+
+	/** The hash the camera really checks, and keys its video with. */
 	private val hashedPassword: String
-		get() = hexUpper(MessageDigest.getInstance(if (usesSha256) "SHA-256" else "MD5").digest(ascii(tapoPassword)))
+		get() = hexUpper(MessageDigest.getInstance(if (hashing == Hashing.Sha256) "SHA-256" else "MD5").digest(ascii(tapoPassword)))
 
 	private val challenge: String
-		get() = "Digest realm=\"$REALM\", nonce=\"$AUTH_NONCE\", qop=\"auth\"" + if (usesSha256) ",$encryptTypeParameter" else ""
+		get() = "Digest realm=\"$REALM\", nonce=\"$AUTH_NONCE\", qop=\"auth\"" + if (advertisesSha256) ",$encryptTypeParameter" else ""
 
 	private val encryptTypeParameter: String
-		get() = if (usesSha256) " encrypt_type=\"3\"" else ""
+		get() = if (advertisesSha256) " encrypt_type=\"3\"" else ""
 
 	private fun isAuthorized(head: List<String>): Boolean {
 		val authorization = head.firstOrNull { it.startsWith("Authorization:", ignoreCase = true) } ?: return false

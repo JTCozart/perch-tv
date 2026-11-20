@@ -31,6 +31,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -136,7 +137,7 @@ private fun TapoFields(form: CameraForm, onChange: (CameraForm) -> Unit) {
 		TextInput("Port", form.port, keyboardType = KeyboardType.Number, width = 140.dp) { onChange(form.copy(port = it)) }
 	}
 	TextInput("Camera account username", form.username) { onChange(form.copy(username = it)) }
-	TextInput("Camera account password", form.password, isSecret = true) { onChange(form.copy(password = it)) }
+	PasswordInput("Camera account password", form.password) { onChange(form.copy(password = it)) }
 	Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
 		PerchButton("Main lens", { onChange(form.copy(lens = Lens.Wide)) }, isPrimary = form.lens == Lens.Wide)
 		PerchButton("Telephoto lens (dual-lens models)", { onChange(form.copy(lens = Lens.Telephoto)) }, isPrimary = form.lens == Lens.Telephoto)
@@ -154,7 +155,7 @@ private fun TapoLocalFields(form: CameraForm, onChange: (CameraForm) -> Unit) {
 		modifier = Modifier.width(fieldWidth * 1.6f),
 	)
 	TextInput("Camera IP address, such as 192.168.1.50", form.host, keyboardType = KeyboardType.Uri) { onChange(form.copy(host = it)) }
-	TextInput("Tapo app password", form.password, isSecret = true) { onChange(form.copy(password = it)) }
+	PasswordInput("Tapo app password", form.password) { onChange(form.copy(password = it)) }
 	TextInput("Hub device ID (only for a camera paired to a hub; then enter the hub's address above)", form.hubDeviceId, width = fieldWidth * 1.6f) {
 		onChange(form.copy(hubDeviceId = it))
 	}
@@ -172,6 +173,16 @@ private fun BridgeFields(form: CameraForm, onChange: (CameraForm) -> Unit) {
 	}
 	TextInput("Tile stream address (optional, lower quality)", form.subStreamUrl, keyboardType = KeyboardType.Uri, width = fieldWidth * 1.6f) {
 		onChange(form.copy(subStreamUrl = it))
+	}
+}
+
+/** A TV keyboard can capitalize or add a space unseen, so the password can be shown to check what was typed. */
+@Composable
+private fun PasswordInput(label: String, value: String, onValueChange: (String) -> Unit) {
+	var isShown by remember { mutableStateOf(false) }
+	Row(horizontalArrangement = Arrangement.spacedBy(12.dp), verticalAlignment = Alignment.CenterVertically) {
+		TextInput(label, value, isSecret = !isShown, keyboardType = KeyboardType.Password, onValueChange = onValueChange)
+		PerchButton(if (isShown) "Hide password" else "Show password", { isShown = !isShown })
 	}
 }
 
@@ -193,6 +204,7 @@ private fun TextInput(
 		visualTransformation = if (isSecret) PasswordVisualTransformation() else VisualTransformation.None,
 		keyboardOptions = KeyboardOptions(
 			keyboardType = if (isSecret) KeyboardType.Password else keyboardType,
+			autoCorrectEnabled = !isSecret && keyboardType == KeyboardType.Text,
 			imeAction = ImeAction.Next,
 		),
 		keyboardActions = KeyboardActions(onNext = { focusManager.moveFocus(FocusDirection.Down) }),

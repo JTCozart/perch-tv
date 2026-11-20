@@ -25,7 +25,7 @@ import kotlinx.coroutines.launch
 import java.util.UUID
 
 @Composable
-fun PerchApp(repository: CameraRepository, liveTileLimit: Int) {
+fun PerchApp(repository: CameraRepository, liveTileLimit: Int, onCheckForUpdates: () -> Unit) {
 	val cameras by repository.cameras.collectAsStateWithLifecycle()
 	val scope = rememberCoroutineScope()
 	var screen by remember { mutableStateOf<Screen>(Screen.Wall) }
@@ -60,6 +60,7 @@ fun PerchApp(repository: CameraRepository, liveTileLimit: Int) {
 					onEditCamera = { screen = Screen.EditCamera(it.id) },
 					onMoveCamera = { camera, offset -> scope.launch { repository.move(camera.id, offset) } },
 					onDeleteCamera = { camera -> scope.launch { repository.delete(camera.id) } },
+					onCheckForUpdates = onCheckForUpdates,
 					onDone = { screen = Screen.Wall },
 				)
 

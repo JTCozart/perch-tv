@@ -24,10 +24,20 @@ class TapoStreamSessionTests : FunSpec({
 	}
 
 	test("NewerFirmwareThatHashesWithSha256IsAlsoOpened") {
-		FakeTapoCamera("tapo-pass1", segments, usesSha256 = true).use { camera ->
+		FakeTapoCamera("tapo-pass1", segments, hashing = FakeTapoCamera.Hashing.Sha256).use { camera ->
 			TapoStreamSession.open(addressOf(camera)).use { session ->
 				readAll(session) shouldBe segments.map { it.toList() }
 			}
+			camera.connections shouldBe 1
+		}
+	}
+
+	test("FirmwareThatAsksForSha256ButOnlyAcceptsMd5IsOpenedOnASecondTryWithMd5") {
+		FakeTapoCamera("tapo-pass1", segments, hashing = FakeTapoCamera.Hashing.Sha256AdvertisedMd5Accepted).use { camera ->
+			TapoStreamSession.open(addressOf(camera)).use { session ->
+				readAll(session) shouldBe segments.map { it.toList() }
+			}
+			camera.connections shouldBe 2
 		}
 	}
 
@@ -35,6 +45,14 @@ class TapoStreamSessionTests : FunSpec({
 		FakeTapoCamera("tapo-pass1", segments).use { camera ->
 			val error = shouldThrow<TapoPasswordRefusedException> { TapoStreamSession.open(addressOf(camera, password = "wrong-one")) }
 			error.message!! shouldContain "password"
+			camera.connections shouldBe 1
+		}
+	}
+
+	test("AWrongPasswordOnSha256FirmwareIsRefusedAfterTheMd5RetryToo") {
+		FakeTapoCamera("tapo-pass1", segments, hashing = FakeTapoCamera.Hashing.Sha256).use { camera ->
+			shouldThrow<TapoPasswordRefusedException> { TapoStreamSession.open(addressOf(camera, password = "wrong-one")) }
+			camera.connections shouldBe 2
 		}
 	}
 

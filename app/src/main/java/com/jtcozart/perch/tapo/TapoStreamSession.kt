@@ -44,7 +44,18 @@ class TapoStreamSession private constructor(
 		private const val CLIENT_NONCE_BYTES = 16
 		private val random = SecureRandom()
 
-		fun open(address: TapoStreamAddress): TapoStreamSession {
+		/**
+		 * Some firmware (C410 1.3.5) asks for the SHA-256 hash but only accepts MD5, so a refused SHA-256 sign-in is tried
+		 * once more with MD5 on a fresh connection, as pytapo does.
+		 */
+		fun open(address: TapoStreamAddress): TapoStreamSession = try {
+			openWith(address, forcedMethod = null)
+		} catch (refused: TapoPasswordRefusedException) {
+			if (refused.method != TapoPasswordHash.Method.Sha256) throw refused
+			openWith(address, forcedMethod = TapoPasswordHash.Method.Md5)
+		}
+
+		private fun openWith(address: TapoStreamAddress, forcedMethod: TapoPasswordHash.Method?): TapoStreamSession {
 			val socket = Socket()
 			try {
 				socket.connect(InetSocketAddress(address.host, address.port), CONNECT_TIMEOUT_MS)
@@ -53,7 +64,7 @@ class TapoStreamSession private constructor(
 				val input = BufferedInputStream(socket.getInputStream())
 				val output = BufferedOutputStream(socket.getOutputStream())
 
-				val cipher = signIn(address, input, output)
+				val cipher = signIn(address, forcedMethod, input, output)
 				output.write(TapoPreviewRequest.part(address))
 				output.flush()
 				return TapoStreamSession(socket, cipher, MultipartPartReader(input))
@@ -63,7 +74,12 @@ class TapoStreamSession private constructor(
 			}
 		}
 
-		private fun signIn(address: TapoStreamAddress, input: InputStream, output: OutputStream): TapoSegmentCipher {
+		private fun signIn(
+			address: TapoStreamAddress,
+			forcedMethod: TapoPasswordHash.Method?,
+			input: InputStream,
+			output: OutputStream,
+		): TapoSegmentCipher {
 			val challengeResponse = exchange(address, authorization = null, input, output)
 			val challenge = challengeResponse.headers["www-authenticate"]
 			if (challengeResponse.statusCode != HTTP_UNAUTHORIZED || challenge?.startsWith("Digest", ignoreCase = true) != true) {
@@ -71,10 +87,12 @@ class TapoStreamSession private constructor(
 			}
 			challengeResponse.discardBody(input)
 
+			val method = forcedMethod ?: TapoPasswordHash.preferredBy(challenge)
+			val hashedPassword = TapoPasswordHash.of(address.tapoPassword, method)
 			val authorization = DigestAuthorization.header(
 				challenge = challenge,
 				username = ADMIN_USERNAME,
-				password = TapoPasswordHash.of(address.tapoPassword, challenge),
+				password = hashedPassword,
 				method = "POST",
 				uri = address.requestPath,
 				clientNonce = clientNonce(),
@@ -82,11 +100,12 @@ class TapoStreamSession private constructor(
 			val streamResponse = exchange(address, authorization, input, output)
 			when (streamResponse.statusCode) {
 				HTTP_OK -> Unit
-				HTTP_UNAUTHORIZED -> throw TapoPasswordRefusedException()
+				HTTP_UNAUTHORIZED -> throw TapoPasswordRefusedException(method)
 				else -> throw TapoStreamException("camera refused the stream with HTTP ${streamResponse.statusCode}")
 			}
 			val keyExchange = streamResponse.headers["key-exchange"] ?: throw TapoStreamException("camera sent no Key-Exchange header")
-			return TapoSegmentCipher.from(keyExchange, TapoPasswordHash.of(address.tapoPassword, keyExchange))
+			// The video is keyed with the hash the camera accepted, whatever its Key-Exchange header advertises (pytapo).
+			return TapoSegmentCipher.from(keyExchange, hashedPassword)
 		}
 
 		private fun exchange(address: TapoStreamAddress, authorization: String?, input: InputStream, output: OutputStream): HttpResponseHead {
